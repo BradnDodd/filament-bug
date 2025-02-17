@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Comment;
 use App\Models\Post;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -23,17 +24,29 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\Component;
 
-class ListPosts extends Component implements HasForms, HasTable
+class ListComments extends Component implements HasForms, HasTable
 {
     use InteractsWithForms, InteractsWithTable;
     const string NAME = 'list-posts';
+    public ?Post $post;
 
+    public function mount(?Post $post)
+    {
+        $this->post = $post;
+    }
     public function getEloquentQuery(): Builder
     {
-        return Post::query()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return !empty($this->post)
+            ? Comment::query()
+                ->join('comments_posts', 'comments.id', '=', 'comments_posts.comment_id')
+                ->where('comments_posts.post_id', '=', $this->post->id)
+                ->withoutGlobalScopes([
+                    SoftDeletingScope::class,
+                ])
+            : Comment::query()
+                ->withoutGlobalScopes([
+                    SoftDeletingScope::class,
+                ]);
     }
 
     /**
@@ -69,8 +82,8 @@ class ListPosts extends Component implements HasForms, HasTable
         return [
             CreateAction::make()
                 ->color(Color::Slate)
-                ->label('New Post')
-                ->model(Post::class)
+                ->label('New Comment')
+                ->model(Comment::class)
                 ->form(self::formSchema())
                 ->slideOver(),
         ];
@@ -86,11 +99,11 @@ class ListPosts extends Component implements HasForms, HasTable
         return [
             ActionGroup::make([
                 ViewAction::make('view')
-                    ->model(Post::class)
+                    ->model(Comment::class)
                     ->form(self::formSchema())
                     ->slideOver(),
                 EditAction::make('Edit')
-                    ->model(Post::class)
+                    ->model(Comment::class)
                     ->form(self::formSchema())
                     ->slideOver(),
                 DeleteAction::make('Delete')
@@ -107,7 +120,7 @@ class ListPosts extends Component implements HasForms, HasTable
     public static function columns(): array
     {
         return [
-            TextColumn::make('title')
+            TextColumn::make('comment')
                 ->searchable(isIndividual: true)
                 ->sortable(),
         ];
@@ -119,7 +132,7 @@ class ListPosts extends Component implements HasForms, HasTable
         return [
             Section::make()
                 ->schema([
-                    TextInput::make('title')
+                    TextInput::make('comment')
                         ->prefixIcon('heroicon-o-identification')
                         ->maxLength(200)
                         ->required(),
