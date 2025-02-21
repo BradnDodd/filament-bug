@@ -8,13 +8,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Colors\Color;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -85,10 +83,9 @@ class ListPosts extends Component implements HasForms, HasTable
     {
         return [
             ActionGroup::make([
-                ViewAction::make('view')
-                    ->model(Post::class)
-                    ->form(self::formSchema())
-                    ->slideOver(),
+                Action::make('showPost')
+                    ->label('view')
+                    ->action(fn($record) => redirect(route('post.show', ['post' => $record]))),
                 EditAction::make('Edit')
                     ->model(Post::class)
                     ->form(self::formSchema())

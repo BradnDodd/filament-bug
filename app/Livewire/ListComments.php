@@ -27,13 +27,17 @@ use Livewire\Component;
 class ListComments extends Component implements HasForms, HasTable
 {
     use InteractsWithForms, InteractsWithTable;
-    const string NAME = 'list-posts';
+    const string NAME = 'list-comments';
     public ?Post $post;
+    protected $listeners = [
+        'post-comment-added' => '$refresh'
+    ];
 
-    public function mount(?Post $post)
+    public function mount($post)
     {
         $this->post = $post;
     }
+
     public function getEloquentQuery(): Builder
     {
         return !empty($this->post)
@@ -84,6 +88,12 @@ class ListComments extends Component implements HasForms, HasTable
                 ->color(Color::Slate)
                 ->label('New Comment')
                 ->model(Comment::class)
+                ->after(function ($record, $livewire){
+//                    $livewire->post->comments()->save($record);
+                    $record->post()->save($livewire->post);
+
+                    $livewire->dispatch('post-comment-added');
+                })
                 ->form(self::formSchema())
                 ->slideOver(),
         ];

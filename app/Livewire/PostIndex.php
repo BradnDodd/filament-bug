@@ -19,23 +19,9 @@ class PostIndex extends Component implements HasForms
 {
     use InteractsWithForms;
 
-    public function editPostsForm(Form $form)
+    public function form(Form $form): Form
     {
         return $form->schema(self::formSchema());
-    }
-
-    public function actionForm(Form $form)
-    {
-        return $form->schema(self::actionFormSchema());
-    }
-
-
-    public function getForms(): array
-    {
-        return [
-            'actionForm',
-            'editPostsForm',
-        ];
     }
 
     public static function formSchema(): array
@@ -45,56 +31,6 @@ class PostIndex extends Component implements HasForms
         ];
     }
 
-    public static function actionFormSchema(): array
-    {
-        return [
-            Tabs::make()
-            ->schema([
-                Tab::make('Summary')
-                    ->schema([
-                        Section::make('Summary')
-                        ->schema([
-                            TextInput::make('title')
-                        ]),
-                        Section::make()
-                            ->schema([
-                                Actions::make([
-                                    Actions\Action::make('editPosts')
-                                        ->label('Edit Posts')
-                                        ->button()
-                                        ->action(fn($livewire) => $livewire->dispatch('open-modal', id: 'edit-posts'))
-                                ])
-                            ])
-                    ]),
-                Tab::make('Comments')
-                ->schema([
-                    Livewire::make(ListComments::class, fn ($record) => ['post' => $record])
-                ]),
-            ]),
-        ];
-    }
-
-
-    public function getModalFooterActions(): array
-    {
-        return [
-            Action::make('save')
-                ->label('Save')
-                ->button()
-                ->color('primary'),
-            StaticAction::make('cancel')
-                ->label('Cancel')
-                ->button()
-                ->close()
-                ->color('gray'),
-        ];
-    }
-
-    public function mountAction(string $name, array $arguments = [])
-    {
-        $this->dispatch('close-modal', id: 'edit-posts');
-
-    }
 
     public function render()
     {
