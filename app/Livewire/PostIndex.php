@@ -20,7 +20,7 @@ class PostIndex extends Component implements HasForms
     public static function formSchema(): array
     {
         return [
-            Livewire::make(ListPosts::class, []),
+            Livewire::make(ListPosts::class, [])->key('PostsIndexListPosts'),
         ];
     }
 
