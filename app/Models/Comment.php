@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comment extends Model
 {
@@ -12,8 +13,8 @@ class Comment extends Model
         'comment',
     ];
 
-    public function post(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function post(): HasMany
     {
-        return $this->belongsToMany(Post::class, 'comments_posts');
+        return $this->hasMany(PostComment::class);
     }
 }

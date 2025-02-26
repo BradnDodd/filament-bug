@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\PostComment;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -86,8 +87,7 @@ class ListComments extends Component implements HasForms, HasTable
                 ->label('New Comment')
                 ->model(Comment::class)
                 ->after(function ($record, $livewire) {
-                    //                    $livewire->post->comments()->save($record);
-                    $record->post()->save($livewire->post);
+                    (new PostComment(['comment_id' => $record->id, 'post_id' => $livewire->post->id]))->save();
 
                     $livewire->dispatch('post-comment-added');
                 })
@@ -130,6 +130,8 @@ class ListComments extends Component implements HasForms, HasTable
             TextColumn::make('comment')
                 ->searchable(isIndividual: true)
                 ->sortable(),
+            \Filament\Tables\Columns\IconColumn::make('pinned')
+                ->boolean(),
         ];
     }
 

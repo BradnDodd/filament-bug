@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('comments_posts', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('post_id')->references('id')->on('posts');
-            $table->foreignId('comment_id')->references('id')->on('comments');
+            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('comment_id');
 
             $table->boolean('pinned')->default(false);
             $table->timestamps();
