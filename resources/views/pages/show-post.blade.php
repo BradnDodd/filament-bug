@@ -12,6 +12,7 @@
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
     @livewire('show-post', ['post' => $post])
 
+@livewire('notifications')
 @livewireScripts
 @filamentScripts
 @vite('resources/js/app.js')

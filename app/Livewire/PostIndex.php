@@ -2,14 +2,7 @@
 
 namespace App\Livewire;
 
-use Filament\Actions\Action;
-use Filament\Actions\StaticAction;
-use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Livewire;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Tabs\Tab;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -30,7 +23,6 @@ class PostIndex extends Component implements HasForms
             Livewire::make(ListPosts::class, []),
         ];
     }
-
 
     public function render()
     {

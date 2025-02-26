@@ -10,10 +10,8 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -30,7 +28,7 @@ class ListComments extends Component implements HasForms, HasTable
     const string NAME = 'list-comments';
     public ?Post $post;
     protected $listeners = [
-        'post-comment-added' => '$refresh'
+        'post-comment-added' => '$refresh',
     ];
 
     public function mount($post)
@@ -40,7 +38,7 @@ class ListComments extends Component implements HasForms, HasTable
 
     public function getEloquentQuery(): Builder
     {
-        return !empty($this->post)
+        return ! empty($this->post)
             ? Comment::query()
                 ->join('comments_posts', 'comments.id', '=', 'comments_posts.comment_id')
                 ->where('comments_posts.post_id', '=', $this->post->id)
@@ -70,7 +68,6 @@ class ListComments extends Component implements HasForms, HasTable
             ->columns(self::columns());
     }
 
-
     /**
      * Returns an array of header actions.
      *
@@ -88,8 +85,8 @@ class ListComments extends Component implements HasForms, HasTable
                 ->color(Color::Slate)
                 ->label('New Comment')
                 ->model(Comment::class)
-                ->after(function ($record, $livewire){
-//                    $livewire->post->comments()->save($record);
+                ->after(function ($record, $livewire) {
+                    //                    $livewire->post->comments()->save($record);
                     $record->post()->save($livewire->post);
 
                     $livewire->dispatch('post-comment-added');
@@ -135,7 +132,6 @@ class ListComments extends Component implements HasForms, HasTable
                 ->sortable(),
         ];
     }
-
 
     public static function formSchema(): array
     {

@@ -51,7 +51,6 @@ class ListPosts extends Component implements HasForms, HasTable
             ->columns(self::columns());
     }
 
-
     /**
      * Returns an array of header actions.
      *
@@ -85,7 +84,7 @@ class ListPosts extends Component implements HasForms, HasTable
             ActionGroup::make([
                 Action::make('showPost')
                     ->label('view')
-                    ->action(fn($record) => redirect(route('post.show', ['post' => $record]))),
+                    ->action(fn ($record) => redirect(route('post.show', ['post' => $record]))),
                 EditAction::make('Edit')
                     ->model(Post::class)
                     ->form(self::formSchema())
@@ -109,7 +108,6 @@ class ListPosts extends Component implements HasForms, HasTable
                 ->sortable(),
         ];
     }
-
 
     public static function formSchema(): array
     {
